@@ -2,8 +2,8 @@
 Extended implementation of a Schroeder Reverb module in the RackAFX format, developed by Will Pirkle.
 
 # Lower Level Description
-Uses the basic All-Pass Filter + parallel Comb Filter topology from Schroeder's research with some tweaks -- most notable diffusion,
-input and output filtering, and a multitapped predelay line. 
+Uses the basic All-Pass Filter + parallel Comb Filter topology from Schroeder's research with some tweaks -- most notably input diffusion,
+input and output filtering, and a multitapped predelay line to simulate early reflections. 
 
 The processing chain is as follows:
 
@@ -15,11 +15,12 @@ to minimize the ringing inherent to this type of reverb.
 
 Combe filter gain is set based on the desired RT60, following an equation from Will Pirkle's "Designing Audio Effect Plugins in C++."
 
-This reverb plugin is not ideal, Schroeder's design (as you can clearly hear) was prone to ringing. The diffusion and ad
+This reverb plugin is not ideal, Schroeder's design (as you can clearly hear) was prone to ringing. It also sounds pretty metallic, for now.
 
 # Use and modification
 To use or tweak these, download Rack AFX, and open the Schroeder.prj file. Create a new project with the Reverb classes box checked,
 and be sure to include the Tapped Delay header in your main class.
 
-Github would not accept the entire directory (5 files would not push properly) so I only included those I thought could easily be added to a project to keep this repo lightweight.
+Github would not accept the entire project directory (5 files would not push properly) so I only included those I thought could easily be added to a 
+project to keep this repo lightweight.
 
