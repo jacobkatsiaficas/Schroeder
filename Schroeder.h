@@ -113,6 +113,7 @@ public:
 	CCombFilter CF2;
 	CCombFilter CF3;
 	CCombFilter CF4;
+	COnePoleLPF LPF_out;
 
 	void cookVariables();
 
@@ -126,6 +127,7 @@ public:
 	float m_fRT60_mS;
 	float m_fPredelay_mS;
 	float m_fLPF_in_g;
+	float m_fLPF_out_g;
 
 	// **--0x1A7F--**
 	// ------------------------------------------------------------------------------- //
