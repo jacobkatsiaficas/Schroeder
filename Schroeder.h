@@ -102,18 +102,23 @@ public:
 	virtual bool __stdcall processAuxInputBus(audioProcessData* pAudioProcessData);
 
 	// Add your code here: ----------------------------------------------------------- //
+	TappedDelay TD;
+
 	COnePoleLPF LPF_in;
+	
 	CDelayAPF in_APF1;
 	CDelayAPF in_APF2;
-	CDelayAPF in_APF3;
-	TappedDelay TD;
+	CDelayAPF in_APF3;	
+
 	CDelayAPF APF1;
 	CDelayAPF APF2;
+
 	CCombFilter CF1;
 	CCombFilter CF2;
 	CCombFilter CF3;
 	CCombFilter CF4;
-
+	CLPFCombFilter LPF_CF1;
+	CLPFCombFilter LPF_CF2;
 	COnePoleLPF LPF_out;
 
 	void cookVariables();

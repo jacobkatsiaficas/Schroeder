@@ -105,6 +105,8 @@ bool __stdcall CSchroeder::prepareForPlay()
 	CF2.init(m_nSampleRate * 0.5);
 	CF3.init(m_nSampleRate * 0.5);
 	CF4.init(m_nSampleRate * 0.5);
+	LPF_CF1.init(m_nSampleRate * 0.5);
+	LPF_CF2.init(m_nSampleRate * 0.5);
 	
 	LPF_in.init();
 	LPF_out.init();
@@ -122,6 +124,8 @@ bool __stdcall CSchroeder::prepareForPlay()
 	CF2.resetDelay();
 	CF3.resetDelay();
 	CF4.resetDelay();
+	LPF_CF1.resetDelay();
+	LPF_CF2.resetDelay();
 
 	// set gains
 	in_APF1.setAPF_g(0.6);
@@ -143,6 +147,8 @@ bool __stdcall CSchroeder::prepareForPlay()
 	CF2.setSampleRate(m_nSampleRate);
 	CF3.setSampleRate(m_nSampleRate);
 	CF4.setSampleRate(m_nSampleRate);
+	LPF_CF1.setSampleRate(m_nSampleRate);
+	LPF_CF2.setSampleRate(m_nSampleRate);
 
 	cookVariables();
 
@@ -173,11 +179,17 @@ void CSchroeder::cookVariables()
 	CF3.setDelay_mSec(37);
 	CF4.setDelay_mSec(41);
 
+	LPF_CF1.setDelay_mSec(33);
+	LPF_CF2.setDelay_mSec(39);
+
 	// set gains from RT60
 	CF1.setComb_g_with_RTSixty(m_fRT60_mS);
 	CF2.setComb_g_with_RTSixty(m_fRT60_mS);
 	CF3.setComb_g_with_RTSixty(m_fRT60_mS);
 	CF4.setComb_g_with_RTSixty(m_fRT60_mS);
+
+	LPF_CF1.setComb_g_with_RTSixty(m_fRT60_mS);
+	LPF_CF2.setComb_g_with_RTSixty(m_fRT60_mS);
 
 	LPF_in.setLPF_g(m_fLPF_in_g);
 	LPF_out.setLPF_g(m_fLPF_out_g);
@@ -230,6 +242,8 @@ bool __stdcall CSchroeder::processAudioFrame(float* pInputBuffer, float* pOutput
 	float f_x2;
 	float f_x3;
 	float f_x4;
+	float f_x5;
+	float f_x6;
 
 	float f_out;
 
@@ -237,8 +251,10 @@ bool __stdcall CSchroeder::processAudioFrame(float* pInputBuffer, float* pOutput
 	CF2.processAudio(&f_temp, &f_x2);
 	CF3.processAudio(&f_temp, &f_x3);
 	CF4.processAudio(&f_temp, &f_x4);
+	LPF_CF1.processAudio(&f_temp, &f_x5);
+	LPF_CF2.processAudio(&f_temp, &f_x6);
 
-	f_temp = (0.15 * f_x1) - (0.15 * f_x2) + (0.15* f_x3) - (0.15 * f_x4);
+	f_temp = (0.15 * f_x1) - (0.15 * f_x2) + (0.15* f_x3) - (0.15 * f_x4) + (0.15 * f_x5) - (0.15 * f_x6);
 
 	// run through damping output filter
 	LPF_out.processAudio(&f_temp, &f_temp);
