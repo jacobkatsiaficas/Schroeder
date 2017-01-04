@@ -113,6 +113,7 @@ public:
 	CCombFilter CF2;
 	CCombFilter CF3;
 	CCombFilter CF4;
+
 	COnePoleLPF LPF_out;
 
 	void cookVariables();

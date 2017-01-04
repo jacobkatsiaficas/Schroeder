@@ -1,15 +1,16 @@
 #include "TappedDelay.h"
+#include <math.h>
 
 TappedDelay::TappedDelay(void) :CDelay()
 {
-	f_mAtten = 0.17;
+	f_mAtten = 0.27;
 }
 
 TappedDelay::~TappedDelay(void)
 {
 }
 
-bool TappedDelay::processAudio(float* pInput, float* pOutput)
+float TappedDelay::processAudio(float* pInput, float* pOutput)
 {
 	// Read the Input
 	float xn = *pInput;
@@ -18,6 +19,13 @@ bool TappedDelay::processAudio(float* pInput, float* pOutput)
 	// read delayed output
 	if (m_fDelayInSamples == 0) {
 		yn = xn;
+		// write to the delay line
+		writeDelayAndInc(xn);
+
+		// output attenuation
+		*pOutput = m_fOutputAttenuation*yn;
+
+		return xn;
 	}
 	else {
 		yn = f_mAtten * readDelay();
@@ -25,6 +33,8 @@ bool TappedDelay::processAudio(float* pInput, float* pOutput)
 		float f_tap_samples = 0.0;
 		float f_tap_mS = 0.0;
 		float f_tap_val = 0.0;
+		
+		float f_decayAtten = f_mAtten;
 
 		// generate 12 multitaps at small intervals greater than the original pre-delay to simulate early reflections
 		for (int i = 0; i < 12; i++) {
@@ -33,7 +43,8 @@ bool TappedDelay::processAudio(float* pInput, float* pOutput)
 			f_tap_samples = m_fDelayInSamples * f_inc;
 			f_tap_mS = (f_tap_samples * 1000.0)/m_nSampleRate;
 			f_tap_val = readDelayAt(f_tap_mS);
-			yn += (f_mAtten * f_tap_val);
+			f_decayAtten = f_mAtten * exp(-1.0 * ((float)i / 4));
+			yn += (f_decayAtten * f_tap_val);
 		}
 
 		// put the pointer in but return one of these for feeding into another
@@ -57,16 +68,15 @@ bool TappedDelay::processAudio(float* pInput, float* pOutput)
 		float f_tapFour_val = readDelayAt(f_tapFour_mS);
 		float f_tapFive_val = readDelayAt(f_tapFive_mS);
 
-		yn = (f_mAtten * f_tapOne_val) + (f_mAtten * f_tapTwo_val) + (f_mAtten * f_tapThree_val) + 
-			(f_mAtten * f_tapFour_val) + (f_mAtten * f_tapFive_val);
+		yn = (f_mAtten * f_tapOne_val) + ((f_mAtten - .04) * f_tapTwo_val) + ((f_mAtten - .07) * f_tapThree_val) + 
+			((f_mAtten - .09) * f_tapFour_val) + ((f_mAtten - .13)* f_tapFive_val);
+		
+		// write to the delay line
+		writeDelayAndInc(xn);
+
+		// output attenuation
+		*pOutput = m_fOutputAttenuation*yn;
+
+		return f_tapThree_val;
 	}
-
-	// write to the delay line
-	writeDelayAndInc(xn);
-
-	// output attenuation
-	*pOutput = m_fOutputAttenuation*yn;
-
-	// all OK
-	return true;
 }

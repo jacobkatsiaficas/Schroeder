@@ -1,5 +1,5 @@
 # Schroeder
-Extended implementation of a Schroeder Reverb module in the RackAFX format, developed by Will Pirkle.
+Extended implementation of a Schroeder Reverb module in the RackAFX format, which was developed by Will Pirkle.
 
 # Lower Level Description
 Uses the basic All-Pass Filter + parallel Comb Filter topology from Schroeder's research with some tweaks -- most notably input diffusion,

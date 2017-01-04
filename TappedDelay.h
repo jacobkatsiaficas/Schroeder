@@ -15,5 +15,5 @@ private:
 
 public:
 	// overrides
-	bool processAudio(float* pInput, float* pOutput);
+	float processAudio(float* pInput, float* pOutput);
 };

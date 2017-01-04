@@ -46,7 +46,6 @@ CSchroeder::CSchroeder()
 	// m_bWantVSTBuffers = true;
 
 	// Finish initializations here
-	APF1 = CDelayAPF();
 }
 
 
@@ -95,18 +94,18 @@ bool __stdcall CSchroeder::prepareForPlay()
 {
 	// predelay  delay, max length of 2.0 s
 	TD.init(m_nSampleRate * 2.0);
-	// max buffer lengths of 100mS
+	// max buffer lengths of 500mS
 	in_APF1.init(m_nSampleRate * 0.1);
 	in_APF2.init(m_nSampleRate * 0.1);
 	in_APF3.init(m_nSampleRate * 0.1);
 
-	APF1.init(m_nSampleRate * 0.1);
-	APF2.init(m_nSampleRate * 0.1);
-	CF1.init(m_nSampleRate * 0.1);
-	CF2.init(m_nSampleRate * 0.1);
-	CF3.init(m_nSampleRate * 0.1);
-	CF4.init(m_nSampleRate * 0.1);
-
+	APF1.init(m_nSampleRate * 0.5);
+	APF2.init(m_nSampleRate * 0.5);
+	CF1.init(m_nSampleRate * 0.5);
+	CF2.init(m_nSampleRate * 0.5);
+	CF3.init(m_nSampleRate * 0.5);
+	CF4.init(m_nSampleRate * 0.5);
+	
 	LPF_in.init();
 	LPF_out.init();
 
@@ -149,8 +148,9 @@ bool __stdcall CSchroeder::prepareForPlay()
 
 void CSchroeder::cookVariables()
 {
-
-	TD.setDelay_mSec(m_fPredelay_mS);
+	// in order to ensure we always have the tapped delay,
+	// bake in an extra .5 mS delay (taps are various multiples)
+	TD.setDelay_mSec(m_fPredelay_mS + 1.0);
 
 	in_APF1.setDelay_mSec(1.23);
 	in_APF2.setDelay_mSec(1.707);
@@ -207,7 +207,11 @@ bool __stdcall CSchroeder::processAudioFrame(float* pInputBuffer, float* pOutput
 	float f_temp = f_in;
 	
 	// multitap delay for early reflections
-	TD.processAudio(&f_in, &f_temp);
+	// returns one of the [not last] taps to blend the reflections with the tail
+	float f_tapOut = TD.processAudio(&f_in, &f_temp);
+
+	// blend the tap with the current processed value
+	f_temp = 0.5 * f_temp + 0.5 * f_tapOut;
 
 	// diffuse them with the input LPF
 	LPF_in.processAudio(&f_temp, &f_temp);
@@ -715,7 +719,7 @@ bool __stdcall CSchroeder::initUI()
 	delete ui3;
 
 
-	m_fLPF_out_g = 0.200000;
+	m_fLPF_out_g = 0.250000;
 	CUICtrl* ui4 = new CUICtrl;
 	ui4->uControlType = FILTER_CONTROL_CONTINUOUSLY_VARIABLE;
 	ui4->uControlId = 4;
@@ -725,7 +729,7 @@ bool __stdcall CSchroeder::initUI()
 	ui4->fUserDisplayDataHiLimit = 1.000000;
 	ui4->uUserDataType = floatData;
 	ui4->fInitUserIntValue = 0;
-	ui4->fInitUserFloatValue = 0.200000;
+	ui4->fInitUserFloatValue = 0.250000;
 	ui4->fInitUserDoubleValue = 0;
 	ui4->fInitUserUINTValue = 0;
 	ui4->m_pUserCookedIntData = NULL;
@@ -735,7 +739,7 @@ bool __stdcall CSchroeder::initUI()
 	ui4->cControlUnits = "Units                                                           ";
 	ui4->cVariableName = "m_fLPF_out_g";
 	ui4->cEnumeratedList = "SEL1,SEL2,SEL3";
-	ui4->dPresetData[0] = 0.000000;ui4->dPresetData[1] = 0.000000;ui4->dPresetData[2] = 0.000000;ui4->dPresetData[3] = 0.000000;ui4->dPresetData[4] = 0.000000;ui4->dPresetData[5] = 0.000000;ui4->dPresetData[6] = 0.000000;ui4->dPresetData[7] = 0.000000;ui4->dPresetData[8] = 0.000000;ui4->dPresetData[9] = 0.000000;ui4->dPresetData[10] = 0.000000;ui4->dPresetData[11] = 0.000000;ui4->dPresetData[12] = 0.000000;ui4->dPresetData[13] = 0.000000;ui4->dPresetData[14] = 0.000000;ui4->dPresetData[15] = 0.000000;
+	ui4->dPresetData[0] = 0.250000;ui4->dPresetData[1] = 0.000000;ui4->dPresetData[2] = 0.000000;ui4->dPresetData[3] = 0.000000;ui4->dPresetData[4] = 0.000000;ui4->dPresetData[5] = 0.000000;ui4->dPresetData[6] = 0.000000;ui4->dPresetData[7] = 0.000000;ui4->dPresetData[8] = 0.000000;ui4->dPresetData[9] = 0.000000;ui4->dPresetData[10] = 0.000000;ui4->dPresetData[11] = 0.000000;ui4->dPresetData[12] = 0.000000;ui4->dPresetData[13] = 0.000000;ui4->dPresetData[14] = 0.000000;ui4->dPresetData[15] = 0.000000;
 	ui4->cControlName = "Output Damping";
 	ui4->bOwnerControl = false;
 	ui4->bMIDIControl = false;
