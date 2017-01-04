@@ -134,8 +134,11 @@ bool __stdcall CSchroeder::prepareForPlay()
 	// set sample rates for CFs
 	TD.setSampleRate(m_nSampleRate);
 
-	//APF1.setSampleRate(m_nSampleRate);
-	//APF2.setSampleRate(m_nSampleRate);
+	in_APF1.setSampleRate(m_nSampleRate);
+	in_APF2.setSampleRate(m_nSampleRate);
+	in_APF3.setSampleRate(m_nSampleRate);
+	APF1.setSampleRate(m_nSampleRate);
+	APF2.setSampleRate(m_nSampleRate);
 	CF1.setSampleRate(m_nSampleRate);
 	CF2.setSampleRate(m_nSampleRate);
 	CF3.setSampleRate(m_nSampleRate);
@@ -654,7 +657,7 @@ bool __stdcall CSchroeder::initUI()
 	ui2->bLogSlider = false;
 	ui2->bExpSlider = false;
 	ui2->fUserDisplayDataLoLimit = 0.000000;
-	ui2->fUserDisplayDataHiLimit = 200.000000;
+	ui2->fUserDisplayDataHiLimit = 150.000000;
 	ui2->uUserDataType = floatData;
 	ui2->fInitUserIntValue = 0;
 	ui2->fInitUserFloatValue = 40.000000;
