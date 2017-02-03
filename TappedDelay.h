@@ -1,5 +1,6 @@
 #pragma once
 #include "Delay.h"
+#include "OnePoleLPF.h"
 
 // derived class of CDelay
 class TappedDelay : public CDelay
@@ -12,6 +13,8 @@ public:
 private:
 	// attenuation
 	float f_mAtten;
+
+	COnePoleLPF LPF;
 
 public:
 	// overrides

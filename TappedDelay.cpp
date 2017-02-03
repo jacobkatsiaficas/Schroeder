@@ -4,6 +4,7 @@
 TappedDelay::TappedDelay(void) :CDelay()
 {
 	f_mAtten = 0.27;
+	LPF.init();
 }
 
 TappedDelay::~TappedDelay(void)

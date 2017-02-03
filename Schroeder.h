@@ -113,12 +113,14 @@ public:
 	CDelayAPF APF1;
 	CDelayAPF APF2;
 
+	// bank 1
 	CCombFilter CF1;
 	CCombFilter CF2;
 	CCombFilter CF3;
 	CCombFilter CF4;
 	CLPFCombFilter LPF_CF1;
 	CLPFCombFilter LPF_CF2;
+
 	COnePoleLPF LPF_out;
 
 	void cookVariables();

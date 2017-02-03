@@ -182,6 +182,7 @@ void CSchroeder::cookVariables()
 	LPF_CF1.setDelay_mSec(33);
 	LPF_CF2.setDelay_mSec(39);
 
+
 	// set gains from RT60
 	CF1.setComb_g_with_RTSixty(m_fRT60_mS);
 	CF2.setComb_g_with_RTSixty(m_fRT60_mS);
