@@ -13,7 +13,7 @@ single-pole LPF with adjustable gain -> 2 APF's to diffuse output -> SIGNAL OUT
 Gain on the input diffusion APF's is set to 0.6, while gain on the output diffusion APF's is set to 0.5. These were tweaked 
 to minimize the ringing inherent to this type of reverb.
 
-Combe filter gain is set based on the desired RT60, following an equation from Will Pirkle's "Designing Audio Effect Plugins in C++."
+Comb filter gain is set based on the desired RT60, following an equation from Will Pirkle's "Designing Audio Effect Plugins in C++."
 
 This reverb plugin is not ideal, Schroeder's design (as you can clearly hear) was prone to ringing. It also sounds pretty metallic, for now.
 
